@@ -467,3 +467,8 @@ with the same code as the original server, and never starts an HTTP listener.
 An optional first raylib GUI is now in `desktop/`; the original CLI/serve commands still work. The GUI has not yet passed a real Devuan/audio acceptance test.
 
 Details: [desktop roadmap, Linux setup, and first-pass privacy audit](docs/DESKTOP_FORK.md).
+
+
+For a desktop `LocalEntryNotFoundError` (missing model cache), explicitly
+prepare the current default weights first: `sh desktop/prepare-model.sh`.
+This is a separate opt-in network step; inference remains offline.

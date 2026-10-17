@@ -154,10 +154,19 @@ def serve(
                 partial.unlink(missing_ok=True)
             _reply(output_stream)
         except Exception as exc:
-            # Keep paths and credentials out of protocol errors by default.
-            # Detailed tracebacks remain in the user's own terminal on stderr.
-            print(f"Desktop synthesis error: {type(exc).__name__}: {exc}", file=sys.stderr)
-            _reply(output_stream, f"{type(exc).__name__}: {exc}")
+            # Give an actionable hint for the initial HF offline cache miss.
+            # First-time model preparation is an explicit, separate step.
+            kind = type(exc).__name__
+            detail = str(exc)
+            if kind == "LocalEntryNotFoundError" or (
+                "local cache" in detail.lower() and "hub" in detail.lower()
+            ):
+                message = "Model missing locally. Run: sh desktop/prepare-model.sh"
+            else:
+                message = f"{kind}: {detail}"
+            # Full diagnostics stay in the user's terminal, not uploaded.
+            print(f"Desktop synthesis error: {kind}: {detail}", file=sys.stderr)
+            _reply(output_stream, message)
 
 
 def main() -> None:

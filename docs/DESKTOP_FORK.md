@@ -162,3 +162,24 @@ status. Its text drawing uses raylib's default limited font; Unicode audio
 text can be passed but glyph rendering may be incomplete. Only one generation
 runs at a time. Model loading is lazy at the first Generate action. Full
 Devuan compilation and actual speech playback require laptop acceptance tests.
+
+
+## Resolving a missing model (LocalEntryNotFoundError)
+
+The current fork's **default** English config is `english_2026-09_2`. A previously installed
+Pocket TTS from an older pip release may have downloaded a different model,
+so the old model cache alone is not sufficient. The GUI itself intentionally
+disables Hugging Face downloads. To cache the expected default weights and
+tokenizer before synthesizing, run from the checked-out repo:
+
+```sh
+sh desktop/prepare-model.sh
+```
+
+This command **asks permission** before contacting Hugging Face. It uses the
+selected `POCKET_TTS_PYTHON` environment, or the active venv/local venv.
+You may need to accept the gated voice-cloning model terms at
+https://huggingface.co/kyutai/pocket-tts and sign in through the Hugging Face
+CLI. The script fails clearly if only the model without voice cloning was
+loaded. After preparation, launch as usual; no network is needed during
+speech generation (assuming your selected local reference is readable).
