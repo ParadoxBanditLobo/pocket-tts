@@ -126,3 +126,39 @@ Upstream code is MIT licensed (retain the original LICENSE and notices).
 Model weights and individual reference recordings have their own provenance,
 terms, and consent considerations. Do not add actual personal voice files,
 Hugging Face credentials, caches, or generated audio to this public Git repo.
+
+
+## Checkpoint B: optional raylib desktop GUI
+
+A C++17 raylib interface is now available in `desktop/main.cpp`. It launches
+`python -u -m pocket_tts.desktop.worker` with anonymous local pipes: **no
+FastAPI server or browser**. Model sessions and up to three reference voice
+states are held by the worker. Use local WAV/MP3/FLAC/OGG or exported
+safetensors voice references. The original engine and its WAV writer are
+unchanged.
+
+On Devuan, install X11/OpenGL build dependencies, a C++ compiler, CMake >=3.25,
+and optionally `zenity` for Browse and Save:
+
+```sh
+sudo apt-get install build-essential cmake git libx11-dev libxrandr-dev libxi-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev libasound2-dev zenity
+sh desktop/run-devuan.sh
+```
+
+CMake uses installed raylib 5.5 if present or downloads its 5.5 source. It does
+not install packages or modify system configuration. The launcher chooses
+`./.venv/bin/python` when present; otherwise `python3` on PATH. Set
+`POCKET_TTS_PYTHON=/absolute/path/to/python` if your existing Pocket TTS
+installation uses another virtual environment.
+
+**Model preparation:** The worker is deliberately HF-offline. You must first
+load the original model once using the existing Python installation while
+online, following the upstream model's license/access requirements. The
+original `pocket-tts generate` command can serve as a quality baseline.
+
+**Known limitations:** The GUI implements a simple append-and-backspace editor
+(Ctrl+A clears), drag/drop or optional Zenity Browse, WAV play/save and
+status. Its text drawing uses raylib's default limited font; Unicode audio
+text can be passed but glyph rendering may be incomplete. Only one generation
+runs at a time. Model loading is lazy at the first Generate action. Full
+Devuan compilation and actual speech playback require laptop acceptance tests.

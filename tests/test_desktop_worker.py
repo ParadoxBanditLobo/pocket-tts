@@ -7,7 +7,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pocket_tts.desktop.worker import serve
+# Import the pure protocol module without importing pocket_tts/__init__.py
+# (which deliberately imports torch for the normal public Python API).
+import importlib.util
+
+WORKER_FILE = Path(__file__).resolve().parents[1] / "pocket_tts" / "desktop" / "worker.py"
+spec = importlib.util.spec_from_file_location("desktop_worker_under_test", WORKER_FILE)
+assert spec and spec.loader
+worker = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(worker)
+serve = worker.serve
 
 
 def gen(voice: str, text: str, dest: str) -> bytes:

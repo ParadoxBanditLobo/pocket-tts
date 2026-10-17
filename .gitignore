@@ -102,3 +102,6 @@ desktop-local/
 *.part.wav
 *.raw
 .env.desktop
+
+# Desktop CMake build tree
+.build/

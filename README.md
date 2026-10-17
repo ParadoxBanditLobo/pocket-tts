@@ -464,6 +464,6 @@ cloning. We do **not** replace synthesis with third-party ONNX models.
 Current checkpoint: a persistent Python synthesis worker that uses local
 reference recordings, retains model/voice state between requests, writes WAVs
 with the same code as the original server, and never starts an HTTP listener.
-The raylib GUI is the next batch; the original CLI/serve commands still work.
+An optional first raylib GUI is now in `desktop/`; the original CLI/serve commands still work. The GUI has not yet passed a real Devuan/audio acceptance test.
 
 Details: [desktop roadmap, Linux setup, and first-pass privacy audit](docs/DESKTOP_FORK.md).
