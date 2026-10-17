@@ -453,3 +453,17 @@ Use of our model must comply with all applicable laws and regulations and must n
 Manu Orsini*, Simon Rouard*, Gabriel De Marmiesse*, Václav Volhejn, Neil Zeghidour, Alexandre Défossez
 
 *equal contribution
+
+
+## Experimental offline desktop fork
+
+The \`ParadoxBanditLobo\` fork is developing an optional lightweight **raylib
+desktop app** while preserving the **original Python TTSModel** and voice
+cloning. We do **not** replace synthesis with third-party ONNX models.
+
+Current checkpoint: a persistent Python synthesis worker that uses local
+reference recordings, retains model/voice state between requests, writes WAVs
+with the same code as the original server, and never starts an HTTP listener.
+The raylib GUI is the next batch; the original CLI/serve commands still work.
+
+Details: [desktop roadmap, Linux setup, and first-pass privacy audit](docs/DESKTOP_FORK.md).

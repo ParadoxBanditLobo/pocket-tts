@@ -94,3 +94,11 @@ italk.yaml
 .venv-train/
 /data*/
 runs/
+
+
+# Desktop frontend output, local model/voice caches and runtime configuration
+desktop-output/
+desktop-local/
+*.part.wav
+*.raw
+.env.desktop
