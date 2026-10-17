@@ -19,9 +19,9 @@ from __future__ import annotations
 import os
 import sys
 from collections import OrderedDict
-from collections.abc import BinaryIO, Callable
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO
 
 # Set before importing huggingface_hub and the actual inference package.
 os.environ["HF_HUB_OFFLINE"] = "1"

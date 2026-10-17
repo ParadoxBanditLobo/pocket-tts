@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <initializer_list>
 #include <filesystem>
 #include <mutex>
 #include <string>
@@ -198,6 +199,9 @@ public:
         receive_ = fdopen(from_child[0], "rb");
         if (!send_ || !receive_) {
             error = "Could not attach local engine streams.";
+            if (!send_) close(to_child[1]);
+            if (!receive_) close(from_child[0]);
+            stop();
             return false;
         }
         setvbuf(send_, nullptr, _IONBF, 0);
@@ -221,11 +225,13 @@ public:
         if (!write_fully(send_, head) || !write_fully(send_, v) ||
             !write_fully(send_, text) || !write_fully(send_, o) || fflush(send_) != 0) {
             error = "Could not send request to the local Python engine.";
+            stop();
             return false;
         }
         char reply[128] = {};
         if (!fgets(reply, sizeof reply, receive_)) {
             error = "Python worker exited unexpectedly; check terminal.";
+            stop();
             return false;
         }
         if (std::strcmp(reply, "OK\n") == 0) return true;
@@ -265,6 +271,10 @@ struct EngineJob {
 
 std::string python_executable(const fs::path& root) {
     if (const char* p = getenv("POCKET_TTS_PYTHON"); p && *p) return p;
+    if (const char* env = getenv("VIRTUAL_ENV"); env && *env) {
+        const fs::path active = fs::path(env) / "bin/python";
+        if (fs::is_regular_file(active)) return active.string();
+    }
     const fs::path local = root / ".venv/bin/python";
     if (fs::exists(local)) return local.string();
     return "python3";
